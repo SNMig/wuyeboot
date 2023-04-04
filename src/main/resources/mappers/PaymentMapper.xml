@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.wuye.mapper.PaymentMapper">   <!-- 命名空间，值与Mapper接口对应 -->
+    <insert id="add">    <!--id的值与接口中的方法名对应上-->
+        insert into wy_payment(payowner,month,money,transfer_time,midpeople)
+        values(#{payowner},#{month},#{money},#{transferTime},#{midpeople})
+    </insert>
+
+    <resultMap id="PaymentMap" type="Payment">
+        <id property="id" column="id"/>
+
+        <result property="payowner" column="payowner"/>
+        <result property="midpeople" column="midpeople"/>
+        <result property="month" column="month"/>
+        <result property="money" column="money"/>
+        <result property="transferTime" column="transfer_time"/>
+    </resultMap>
+
+
+    <select id="getPageByCondition" resultMap="PaymentMap">
+        select p.*, u.account,o.name from wy_payment p left outer join wy_user u on p.midpeople=u.id left outer join wy_owner o on p.payowner=o.id
+        <where>
+
+            <if test="payowner !=null and payowner !=0">and payowner=#{payowner}</if>
+            <if test="month !=null and month !=0">and month=#{month}</if>
+            <if test="minTime !=null">
+                <![CDATA[
+                    and transfer_time>=#{minTime}
+                    ]]>
+            </if>
+            <if test="maxTime !=null">
+                <![CDATA[
+                    and transfer_time<=#{maxTime}
+                    ]]>
+            </if>
+<!--            -->
+
+        </where>
+    </select>
+
+</mapper>

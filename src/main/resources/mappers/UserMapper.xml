@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.wuye.mapper.UserMapper">   <!-- 命名空间，值与Mapper接口对应 -->
+    <insert id="add" useGeneratedKeys="true" keyColumn="id" keyProperty="id">    <!--id的值与接口中的方法名对应上-->
+        insert into wy_user(id,account,password,role,status) values(#{id},#{account},#{password},#{role},#{status})
+    </insert>
+    <update id="update">
+        update wy_user set account=#{account},password=#{password},role=#{role},status=#{status} where id=#{id}
+    </update>
+    <delete id="del">
+        delete from wy_user where id=#{id}
+    </delete>
+    <select id="getAll">
+        select * from wy_user
+    </select>
+    <select id="getAccountCount">
+        select count(*) from wy_user where account=#{account}
+    </select>
+    <select id="getAccountAndPwd">
+        select * from wy_user where account=#{account} and password=#{password}
+    </select>
+    <select id="getById" resultMap="userMapper">
+        SELECT u.*,m.id MID,m.name,m.link,m.pid FROM wy_user u,wy_menu m,wy_user_menu um WHERE
+        u.id=um.user_id AND m.id=um.menu_id AND u.id=#{id}
+    </select>
+    <resultMap id="userMapper" type="User">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <collection property="menus" ofType="Menu">
+            <id column="mid" property="id"/>
+            <result column="name" property="name"/>
+            <result column="link" property="link"/>
+            <result column="pid" property="pid"/>
+        </collection>
+    </resultMap>
+    <select id="getById2" resultMap="userMapper2">
+        select * from wy_user where id=#{id}
+    </select>
+    <resultMap id="userMapper2" type="User">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <collection property="menus" column="id" select="com.woniuxy.wuye.mapper.MenuMapper.getByUserId" fetchType="lazy"/>
+    </resultMap>
+</mapper>

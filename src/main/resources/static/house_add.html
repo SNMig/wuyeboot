@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/elementui.css"/>
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="楼宇">
+            <el-input v-model="form.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="单元">
+            <el-input type="textarea" v-model="form.units"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            form:{
+                name: '',
+                units: ''
+            }
+        },
+        methods: {
+            onSubmit() {
+                axios.post("/building/add", this.form).then(function (response){
+                    if (response.data.code==200){
+                        location.href="/building_list.html"
+                    }else {
+                        alert("系统错误")
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

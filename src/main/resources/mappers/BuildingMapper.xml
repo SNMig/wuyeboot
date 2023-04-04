@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.wuye.mapper.BuildingMapper">   <!-- 命名空间，值与Mapper接口对应 -->
+    <insert id="add">    <!--id的值与接口中的方法名对应上-->
+        insert into wy_building(name,units,status) values(#{name},#{units},#{status})
+    </insert>
+    <update id="update">
+        update wy_building set name=#{name},units=#{units},status=#{status} where id=#{id}
+    </update>
+    <delete id="del">
+        delete from wy_building where id=#{id}
+    </delete>
+    <select id="getAll" resultType="Building">
+        select * from wy_building
+    </select>
+    <select id="getById">
+        select * from wy_building where id=#{id}
+    </select>
+    <update id="updateStatus">
+        update wy_building set status='y'
+        <where>
+            <foreach collection="ids" item="id" open="id in(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+</mapper>

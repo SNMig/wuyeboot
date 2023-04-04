@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.wuye.mapper.OwnerMapper">   <!-- 命名空间，值与Mapper接口对应 -->
+    <insert id="add">    <!--id的值与接口中的方法名对应上-->
+        insert into wy_owner(id,name,gender,telphone,identity,STATUS) values(#{id},#{name},#{gender},#{telphone},#{identity},#{status})
+    </insert>
+    <update id="update">
+        update wy_owner set name=#{name},gender=#{gender},telphone=#{telphone},identity=#{identity},STATUS=#{status} where id=#{id}
+    </update>
+    <delete id="del">
+        delete from wy_owner where id=#{id}
+    </delete>
+    <select id="getAll">
+        select * from wy_owner
+    </select>
+    <select id="getById">
+        select * from wy_owner where id=#{id}
+    </select>
+</mapper>
