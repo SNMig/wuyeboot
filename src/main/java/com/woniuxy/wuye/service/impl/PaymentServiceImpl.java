@@ -2,7 +2,6 @@ package com.woniuxy.wuye.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.woniuxy.wuye.entity.House;
 import com.woniuxy.wuye.entity.PageBean;
 import com.woniuxy.wuye.entity.Payment;
 import com.woniuxy.wuye.mapper.PaymentMapper;
@@ -11,11 +10,12 @@ import com.woniuxy.wuye.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    @Autowired
+    @Resource
     private PaymentMapper paymentMapper;
     @Override
     public void add(Payment payment) {

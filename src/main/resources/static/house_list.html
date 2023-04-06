@@ -13,68 +13,239 @@
 <body style="background-color: #f2f9fd;">
 
 <div id="app">
-    <template>
-        <el-table
-                :data="buildings"
-                stripe="true"
-                border="true"
 
-                style="width: 100%">
-            <el-table-column
-                    fixed="left"
-                    label="序号"
-                    type="index"
-                    width="50">
-            </el-table-column>
 
-            <el-table-column
-                    prop="name"
-                    label="楼宇"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="units"
-                    label="单元"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    label="状态"
-                    width="180">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px" v-if="scope.row.status=='n'">否</span>
-                    <span style="margin-left: 10px" v-if="scope.row.status=='y'">是</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button
-                            size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑
-                    </el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+    <el-form :inline="true" :model="houseQO" class="demo-form-inline">
+        <el-form-item label="房号">
+            <el-input v-model="houseQO.no" placeholder="请输入房号"></el-input>
+        </el-form-item>
+        <el-form-item label="楼宇">
+            <el-select v-model="houseQO.buildingId" placeholder="请选择楼宇">
+                <el-option
+                        v-for="building in buildings"
+                        :key="building.id"
+                        :label="building.name+building.units"
+                        :value="building.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="面积">
+            <el-input v-model="houseQO.minArea" placeholder="请输入面积"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-input v-model="houseQO.maxArea" placeholder="请输入面积"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="search">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <el-table
+            :data="houses"
 
-    </template>
+
+            style="width: 100%">
+        <el-table-column
+                fixed="no"
+                label="房号"
+                width="50">
+        </el-table-column>
+
+        <el-table-column
+
+                label="楼宇"
+                width="180">
+            <template slot-scope="scope">
+                {{scope.row.building.name}}{{scope.row.building.units}}
+            </template>
+        </el-table-column>
+        <el-table-column
+                prop="area"
+                label="面积"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="remark"
+                label="附注"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="owner.name"
+                label="业主"
+                width="100">
+        </el-table-column>
+        <el-table-column
+                prop="deliveryDay"
+                label="日期"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="image"
+                label="图片"
+                width="180">
+        </el-table-column>
+        <el-table-column label="操作">
+            <template slot-scope="scope">
+                <el-button
+                        size="mini"
+                        @click="handleEdit(scope.$index, scope.row)=true">编辑
+                </el-button>
+                <el-button
+                        size="mini"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)=true">删除
+                </el-button>
+            </template>
+        </el-table-column>
+
+
+    </el-table>
+    <br>
+    <el-pagination
+            background
+            layout="prev, pager, next"
+            @current-change="goPage"
+            :page-count="pageCount">
+    </el-pagination>
+
+
+
+    <el-dialog title="修改房屋信息" :visible.sync="dialogFormVisible">
+        <el-form :model="house">ref="form" status-icon label-width="80px">
+            <el-form-item label="房号" prop="no":label-width="formLabelWidth">
+                <el-input v-model="house.no"></el-input>
+            </el-form-item>
+            <el-form-item label="楼宇" prop="buildingId":label-width="formLabelWidth">
+                <el-select v-model="house.buildingId">
+                    <el-option
+                            v-for="building in buildings"
+                            :key="building.id"
+                            :label="building.name+building.units"
+                            :value="building.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="面积" prop="area":label-width="formLabelWidth">
+                <el-input v-model="house.area"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark":label-width="formLabelWidth">
+                <el-input v-model="house.remark"></el-input>
+            </el-form-item>
+            <el-form-item label="业主" prop="ownerId":label-width="formLabelWidth">
+                <el-select v-model="house.ownerId" placeholder="请选择业主">
+                    <el-option
+                            v-for="owner in owners"
+                            :key="owner.id"
+                            :label="owner.name"
+                            :value="owner.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="交房日" prop="deliveryDay":label-width="formLabelWidth">
+                <el-input v-model="house.deliveryDay"></el-input>
+            </el-form-item>
+            <el-form-item label="图片":label-width="formLabelWidth">
+                <el-upload
+                        class="avatar-uploader"
+                        action="/house/upload"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess">
+                    <img v-if="house.image" :src="house.image" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+            </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
 
 </div>
 <script>
     new Vue({
         el: "#app",
         data: {
-            buildings: []
+            houses: [],
+            buildings: [],
+            owners: [],
+            houseQO: {
+                no: '',
+                buildingId: '',
+
+                minArea: '',
+                maxArea: ''
+            },
+            pageCount:0,
+
+            dialogTableVisible: false,
+            dialogFormVisible: false,
+
+            house: {
+                no: '',
+                buildingId: '',
+                area: '',
+                remark: '',
+                ownerId: '',
+                deliveryDay: '',
+                image: ''
+            },
+            formLabelWidth: '120px'
         },
+
+
+        methods: {
+            goPage(page) {
+                axios.get('house/list'+page, {
+                    params: {
+                        page
+                    }
+                }).then(response => {
+                    this.houses = response.data.data.data
+                })
+            },
+            search() {
+                axios.get("/house/list", {
+                    params: this.houseQO
+                }).then(r => {
+                    if (r.data.code == 200) {
+                        this.houses = r.data.data.data
+                        this.pageCount=r.data.data.totalPage
+                    }
+                })
+            },
+            handleEdit(index, row) {
+                console.log(index, row);
+                axios.post('/house/update', this.house).then(response => {
+                    if (response.data.code === 200) {
+                        alert("修改成功");
+                        location.href="/house_list.html";
+                    } else if (response.data.code === -1) {
+                        alert("系统异常，请稍候再试")
+                    }
+                })
+            },
+            handleDelete(index, row) {
+                console.log(index, row);
+            },
+            handleAvatarSuccess(res, file) {
+                this.house.image = res.data;
+            }
+
+        },
+
         mounted: function () {
-            console.log(this)
-            axios.get("/building/list").then(r => {
-                console.log(this)
-                console.log(r.data.data)
-                this.buildings = r.data.data;
+            axios.get("/house/list").then(response => {
+                this.houses = response.data.data.data
+                this.pageCount = response.data.data.totalPage
+            })
+            axios.get('/building/list').then(response => {
+                if (response.data.code == 200) {
+                    this.buildings = response.data.data
+                }
+            })
+            axios.get('house/listOwners').then(response => {
+                this.owners = response.data.data
             })
         }
 

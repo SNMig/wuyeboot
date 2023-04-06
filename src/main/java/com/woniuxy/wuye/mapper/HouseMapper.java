@@ -1,4 +1,4 @@
-package com.woniuxy.wuye.query.mapper;
+package com.woniuxy.wuye.mapper;
 
 import com.woniuxy.wuye.entity.House;
 import com.woniuxy.wuye.query.HouseQO;

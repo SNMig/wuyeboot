@@ -5,8 +5,11 @@ import com.woniuxy.wuye.entity.User;
 import java.util.List;
 
 public interface UserService {
-    User getAccountAndPwd(String account,String password);
+    User login(String account,String password);
     boolean isExist(String account);
 
     List<User> getAll();
+
+    void addUserMenu(User user,int[] ids);
+
 }

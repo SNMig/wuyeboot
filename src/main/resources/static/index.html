@@ -29,14 +29,14 @@
     <div class="leftnav-title">
         <strong><span class="icon-list"></span>菜单列表</strong>
     </div>
-    <div>
+    <div v-for="menu in menus" v-if="menu.pid==null">
         <h2>
-            <span class="icon-user">一级菜单</span>
+            <span class="icon-user">{{menu.name}}</span>
         </h2>
-        <ul>
+        <ul v-for="submenu in menus" v-if="submenu.pid==menu.id">
             <li>
-                <a href="" target="right">
-                    <span class="icon-caret-right">二级菜单</span></a>
+                <a :href="submenu.link" target="right">
+                    <span class="icon-caret-right">{{submenu.name}}</span></a>
             </li>
         </ul>
     </div>
@@ -45,6 +45,23 @@
 <div class="admin">
     <iframe src="welcome.html" name="right" width="100%" height="100%"></iframe>
 </div>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            menus:[]
+        },
+        mounted:function (){
+            console.log(this)
+            axios.get("/menu/left").then(r=>{
+                console.log(this)
+                console.log(r.data.data)
+                this.menus=r.data.data;
+            })
+        }
+
+    });
+</script>
 </body>
 
 </html>
