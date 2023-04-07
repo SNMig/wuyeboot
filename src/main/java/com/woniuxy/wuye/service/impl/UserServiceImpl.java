@@ -1,6 +1,7 @@
 package com.woniuxy.wuye.service.impl;
 
 import com.woniuxy.wuye.entity.User;
+import com.woniuxy.wuye.exception.AccountExistException;
 import com.woniuxy.wuye.mapper.MenuMapper;
 import com.woniuxy.wuye.mapper.UserMapper;
 import com.woniuxy.wuye.mapper.UserMenuMapper;
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserMenu(User user, int[] ids) {
+
         user.setStatus("y");
         userMapper.add(user);
         for (int id : ids) {

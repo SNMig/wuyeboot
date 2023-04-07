@@ -62,6 +62,9 @@
                     if (response.data.code==200){
                         alert("增加成功")
 
+                    }else if (response.data.code==500){
+                        alert("账号已存在")
+
                     }else {
                         alert("系统错误")
                     }

@@ -22,11 +22,7 @@ public class MenuController {
     public ResponseResult<List<Menu>> left(HttpSession session){
         User user=(User)session.getAttribute("user");
         List<Menu> menus=menuService.getByUserId(user.getId());
-        ResponseResult<List<Menu>>list=new ResponseResult<>();
-        list.setCode(200);
-        list.setMsg("ok");
-        list.setData(menus);
-        return list;
+        return ResponseResult.ok(menus);
     }
 
     @GetMapping("/list")
@@ -43,10 +39,6 @@ public class MenuController {
                 }
             }
         }
-        ResponseResult<List<Menu>>responseResult=new ResponseResult<>();
-        responseResult.setCode(200);
-        responseResult.setMsg("ok");
-        responseResult.setData(parentMenus);
-        return responseResult;
+        return ResponseResult.ok(parentMenus);
     }
 }

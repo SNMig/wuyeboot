@@ -4,6 +4,7 @@ import com.woniuxy.wuye.entity.Building;
 import com.woniuxy.wuye.service.BuildingService;
 import com.woniuxy.wuye.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,27 +21,14 @@ public class BuildingController {
     private BuildingService buildingService;
 
     @RequestMapping("/add")
-    public ResponseResult<Void> add(@RequestBody Building building){
-        ResponseResult<Void> responseResult=new ResponseResult<Void>();
-
-        try {
-            buildingService.add(building);
-            responseResult.setCode(200);
-            responseResult.setMsg("ok");
-            return responseResult;
-        }catch (Exception e){
-            responseResult.setCode(-1);
-            responseResult.setMsg("系统错误");
-            return responseResult;
-        }
+    public ResponseResult<Void> add(@Validated @RequestBody Building building) {
+        buildingService.add(building);
+        return ResponseResult.ok();
     }
 
     @RequestMapping("list")
-    public ResponseResult<List<Building>>list(){
-        ResponseResult<List<Building>> responseResult=new ResponseResult<>();
-        List<Building>buildings=buildingService.getAll();
-        responseResult.setCode(200);
-        responseResult.setData(buildings);
-        return responseResult;
+    public ResponseResult<List<Building>> list() {
+        List<Building> buildings = buildingService.getAll();
+        return ResponseResult.ok(buildings);
     }
 }

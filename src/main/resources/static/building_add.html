@@ -37,8 +37,11 @@
             onSubmit() {
                 axios.post("/building/add", this.form).then(function (response){
                     if (response.data.code==200){
-                        location.href="/building_list.html"
-                    }else {
+                        alert("增加成功")
+                        location.href="building_list.html"
+                    }else if (response.data.code==405){
+                        let msg=response.data.msg;
+                    } else{
                         alert("系统错误")
                     }
                 })

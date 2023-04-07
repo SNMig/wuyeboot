@@ -6,6 +6,7 @@ import com.woniuxy.wuye.service.UserService;
 import com.woniuxy.wuye.vo.ResponseResult;
 import com.woniuxy.wuye.vo.UserMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,47 +23,27 @@ public class UserController {
 
 
     @RequestMapping("/login")
-    public ResponseResult<Void> login(@RequestBody User user, HttpSession session) {
-        ResponseResult<Void> responseResult=new ResponseResult<>();
+    public ResponseResult<?> login(@RequestBody User user, HttpSession session) {
+
         User u = userService.login(user.getAccount(), user.getPassword());
-
-        try {
-            if (u != null) {
-                session.setAttribute("user",u);
-                responseResult.setCode(200);
-                responseResult.setMsg("成功");
-                return responseResult;
-            } else {
-                responseResult.setCode(300);
-                responseResult.setMsg("登录失败");
-
-                return responseResult;
-            }
-        }catch (Exception e){
-            responseResult.setCode(-1);
-            responseResult.setMsg("系统错误");
-        }
-        return responseResult;
+        session.setAttribute("user", u);
+        return ResponseResult.ok();
     }
 
 
     @PostMapping("/add")
-    public ResponseResult<Void>addUserMenu(@RequestBody UserMenuVO userMenuVO){
-        userService.addUserMenu(userMenuVO.getUser(),userMenuVO.getMenuIds());
-        ResponseResult<Void>responseResult=new ResponseResult<>();
-        responseResult.setCode(200);
-        responseResult.setMsg("ok");
-        return responseResult;
+    public ResponseResult<Void> addUserMenu(@RequestBody UserMenuVO userMenuVO) {
+        userService.addUserMenu(userMenuVO.getUser(), userMenuVO.getMenuIds());
+        return ResponseResult.ok();
+
     }
 
+
     @GetMapping("/list")
-    public ResponseResult<List<User>>list(){
-        List<User>list=userService.getAll();
-        ResponseResult<List<User>>responseResult=new ResponseResult<>();
-        responseResult.setData(list);
-        responseResult.setCode(200);
-        responseResult.setMsg("ok");
-        return responseResult;
+    public ResponseResult<List<User>> list() {
+        List<User> list = userService.getAll();
+        return ResponseResult.ok(list);
+
     }
 
 }

@@ -37,7 +37,7 @@ public class HouseController {
 
     @PostMapping("/upload")
     public ResponseResult<String> upload(MultipartFile file) {
-        ResponseResult<String> responseResult = new ResponseResult<>();
+
         String newFileName = UUID.randomUUID().toString().replaceAll("-", "");
         String originalFilename = file.getOriginalFilename();
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -46,62 +46,39 @@ public class HouseController {
 
         try {
             file.transferTo(dest);
-            responseResult.setCode(200);
-            responseResult.setMsg("success");
-            responseResult.setData(newFileName + suffix);
+            return ResponseResult.ok(newFileName + suffix);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return responseResult;
+
     }
 
     @GetMapping("/listOwners")
     public ResponseResult<List<Owner>> listOwners() {
-        ResponseResult<List<Owner>> responseResult = new ResponseResult<>();
-        responseResult.setCode(200);
-        responseResult.setMsg("ok");
-        responseResult.setData(ownerService.getAll());
-        return responseResult;
+        return ResponseResult.ok(ownerService.getAll());
     }
 
     @PostMapping("/add")
     public ResponseResult<Void> add(@RequestBody House house) {
-        ResponseResult<Void> responseResult = new ResponseResult<>();
-        try {
-            houseService.add(house);
-            responseResult.setCode(200);
-            responseResult.setMsg("success");
-        } catch (Exception e) {
-            responseResult.setCode(-1);
-            responseResult.setMsg("system error");
-        }
-        return responseResult;
+        houseService.add(house);
+        return ResponseResult.ok();
     }
 
-    @GetMapping({"/list","/list{page}"})
+    @GetMapping({"/list", "/list{page}"})
     public ResponseResult<PageBean<House>> list(HouseQO houseQO, @PathVariable(required = false) Integer page) {
         if (page == null) {
             page = 1;
         }
-        PageBean<House>pageBean=houseService.getByPage2(houseQO,page);
-        ResponseResult<PageBean<House>> responseResult = new ResponseResult<>();
-        responseResult.setCode(200);
-        responseResult.setMsg("ok");
-        responseResult.setData(pageBean);
-        return responseResult;
+        PageBean<House> pageBean = houseService.getByPage2(houseQO, page);
+
+        return ResponseResult.ok(pageBean);
     }
 
     @PostMapping("/update")
     public ResponseResult<Void> update(@RequestBody House house) {
-        ResponseResult<Void> responseResult = new ResponseResult<>();
-        try {
-            houseService.update(house);
-            responseResult.setCode(200);
-            responseResult.setMsg("success");
-        } catch (Exception e) {
-            responseResult.setCode(-1);
-            responseResult.setMsg("system error");
-        }
-        return responseResult;
+
+        houseService.update(house);
+
+        return ResponseResult.ok();
     }
 }
