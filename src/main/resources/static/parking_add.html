@@ -10,13 +10,13 @@
 </head>
 <body>
 <div id="app">
-    <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="楼宇">
-            <el-input v-model="form.name"></el-input>
+    <el-form ref="form" :model="form" status-icon :rules="rules" label-width="80px">
+        <el-form-item label="车位号" prop="num">
+            <el-input v-model="form.no"></el-input>
         </el-form-item>
 
-        <el-form-item label="单元">
-            <el-input type="textarea" v-model="form.units"></el-input>
+        <el-form-item label="持有人" prop="holder">
+            <el-input type="textarea" v-model="form.owner"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -29,16 +29,26 @@
         el: "#app",
         data: {
             form:{
-                name: '',
-                units: ''
+                no: '',
+                owner: '',
+            },
+            rules: {
+                num: [
+                    {required: true, message: '请输入车位号', trigger: 'blur'},
+                    {min: 3, max: 4, message: '长度在 3 到 4 个字符', trigger: 'blur'}
+                ],
+                holder: [
+                    {required: true, message: '请输入持有人', trigger: 'blur'},
+                    {min: 2, max: 3, message: '长度在 2 到 3 个字符', trigger: 'blur'}
+                ]
             }
         },
         methods: {
             onSubmit() {
-                axios.post("/building/add", this.form).then(function (response){
+                axios.post("/parking/add", this.form).then(function (response){
                     if (response.data.code==200){
                         alert("增加成功")
-                        location.href="building_list.html"
+                        location.href="parking_list.html"
                     }else if (response.data.code==405){
                         let msg=response.data.data;
                     } else{

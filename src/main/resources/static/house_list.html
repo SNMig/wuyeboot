@@ -223,15 +223,15 @@
             updateHouse() {
                 axios.post('/house/update', this.house).then(response => {
                     if (response.data.code === 200) {
-                        this.$message.success('修改成功')
+                        alert('修改成功')
                         this.dialogFormVisible = false
                         location.href="/house_list.html";
                     } else {
-                        this.$message.error(response.data.msg)
+                        alert(response.data.msg)
                     }
                 }).catch(error => {
                     console.log(error)
-                    this.$message.error('修改失败')
+                    alert('修改失败')
                 })
             },
             handleDelete(index, row) {
